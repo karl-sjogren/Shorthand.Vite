@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Vite.Tests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Vite.TestHelpers", "test\Shorthand.Vite.TestHelpers\Shorthand.Vite.TestHelpers.csproj", "{23CAAE77-3BA6-47E6-BE31-048D000E3FAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Vite.SampleSite", "src\Shorthand.Vite.SampleSite\Shorthand.Vite.SampleSite.csproj", "{B0BD387F-C973-4283-BDC9-9ECC45ACD66D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +36,15 @@ Global
 		{23CAAE77-3BA6-47E6-BE31-048D000E3FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23CAAE77-3BA6-47E6-BE31-048D000E3FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23CAAE77-3BA6-47E6-BE31-048D000E3FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BD387F-C973-4283-BDC9-9ECC45ACD66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BD387F-C973-4283-BDC9-9ECC45ACD66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BD387F-C973-4283-BDC9-9ECC45ACD66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BD387F-C973-4283-BDC9-9ECC45ACD66D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C53909E3-1076-402E-981D-477C340599E7} = {362B8B37-5E5D-4E36-B272-17E0D985B7A0}
 		{6E055661-9DD9-47EA-BFA4-E20862522A9C} = {982AABDB-799C-4A5A-817B-421D100AAE99}
 		{23CAAE77-3BA6-47E6-BE31-048D000E3FAC} = {982AABDB-799C-4A5A-817B-421D100AAE99}
+		{B0BD387F-C973-4283-BDC9-9ECC45ACD66D} = {362B8B37-5E5D-4E36-B272-17E0D985B7A0}
 	EndGlobalSection
 EndGlobal

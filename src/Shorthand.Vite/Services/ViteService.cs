@@ -26,14 +26,20 @@ public class ViteService : IViteService {
         if(_webHostEnvironment.EnvironmentName == "Development") {
             var hostname = GetViteHostname();
             var port = GetVitePort();
-            return $"https://{hostname}:{port}/{assetPath}";
+            var protocol = GetViteProtocol();
+            return $"{protocol}://{hostname}:{port}/{assetPath}";
         }
 
         var manifest = await GetAssetManifestAsync(cancellationToken);
 
         manifest.TryGetValue(assetPath, out var asset);
 
-        var file = asset?.File;
+        if(asset == null) {
+            _logger.LogWarning("Could not find asset {AssetPath} in manifest.", assetPath);
+            return null;
+        }
+
+        var file = asset.File;
         if(file?.StartsWith("/", StringComparison.Ordinal) == false) {
             file = "/" + file;
         }
@@ -52,10 +58,10 @@ public class ViteService : IViteService {
             return viteHostName;
         }
 
-        return "127.0.0.1";
+        return "localhost";
     }
 
-    private Int32 GetVitePort() {
+    internal Int32 GetVitePort() {
         var options = _options.Value;
         if(options.Port.HasValue) {
             return options.Port.Value;
@@ -66,7 +72,21 @@ public class ViteService : IViteService {
             return vitePort;
         }
 
-        return 5010;
+        return 5173;
+    }
+
+    internal string GetViteProtocol() {
+        var options = _options.Value;
+        if(options.Https.HasValue) {
+            return "https";
+        }
+
+        var viteHttps = Environment.GetEnvironmentVariable("VITE_HTTPS");
+        if(viteHttps?.Equals("true", StringComparison.OrdinalIgnoreCase) == true) {
+            return "https";
+        }
+
+        return "http";
     }
 
     private async Task<Dictionary<string, ManifestEntry>> GetAssetManifestAsync(CancellationToken cancellationToken) {
