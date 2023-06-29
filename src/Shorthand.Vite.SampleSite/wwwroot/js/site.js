@@ -3,5 +3,8 @@
 
 // Write your JavaScript code.
 
+import '../lib/bootstrap/dist/css/bootstrap.min.css';
+import '../css/site.scss';
+
 import '../lib/jquery/dist/jquery.min.js'
 import '../lib/bootstrap/dist/js/bootstrap.bundle.min.js'
