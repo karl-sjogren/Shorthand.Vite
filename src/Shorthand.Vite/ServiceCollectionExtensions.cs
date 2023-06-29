@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shorthand.Vite.Contracts;
+using Shorthand.Vite.Services;
 
 namespace Shorthand.Vite;
 
@@ -8,7 +9,7 @@ public static class ServiceCollectionExtensions {
         services.AddOptions<ViteOptions>()
             .Configure(configureOptions ?? (_ => { }));
 
-        services.AddSingleton<IVite, Services.Vite>();
+        services.AddSingleton<IViteService, ViteService>();
 
         return services;
     }

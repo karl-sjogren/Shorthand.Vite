@@ -7,15 +7,15 @@ using Shorthand.Vite.Exceptions;
 
 namespace Shorthand.Vite.Services;
 
-public class Vite : IVite {
+public class ViteService : IViteService {
     private readonly IOptionsSnapshot<ViteOptions> _options;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IFileSystemProvider _fileSystemProvider;
-    private readonly ILogger<Vite> _logger;
+    private readonly ILogger<ViteService> _logger;
 
     private static readonly JsonSerializerOptions _manifestJsonOptions = new(JsonSerializerDefaults.Web);
 
-    public Vite(IOptionsSnapshot<ViteOptions> options, IWebHostEnvironment webHostEnvironment, IFileSystemProvider fileSystemProvider, ILogger<Vite> logger) {
+    public ViteService(IOptionsSnapshot<ViteOptions> options, IWebHostEnvironment webHostEnvironment, IFileSystemProvider fileSystemProvider, ILogger<ViteService> logger) {
         _options = options;
         _webHostEnvironment = webHostEnvironment;
         _fileSystemProvider = fileSystemProvider;
@@ -83,9 +83,9 @@ public class Vite : IVite {
         }
     }
 
-    private class ManifestEntry {
-        public string File { get; set; } = string.Empty;
-        public string Src { get; set; } = string.Empty;
-        public bool IsEntry { get; set; }
+    private record ManifestEntry {
+        public string File { get; init; } = string.Empty;
+        public string Src { get; init; } = string.Empty;
+        public bool IsEntry { get; init; }
     }
 }
