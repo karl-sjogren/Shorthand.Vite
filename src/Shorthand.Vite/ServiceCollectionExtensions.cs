@@ -9,7 +9,8 @@ public static class ServiceCollectionExtensions {
         services.AddOptions<ViteOptions>()
             .Configure(configureOptions ?? (_ => { }));
 
-        services.AddSingleton<IViteService, ViteService>();
+        services.AddScoped<IViteService, ViteService>();
+        services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
 
         return services;
     }
