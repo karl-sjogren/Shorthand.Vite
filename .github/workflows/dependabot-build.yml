@@ -1,4 +1,4 @@
-name: '[Dependabot] Build and publish application'
+name: '[Dependabot] Build and publish'
 
 on:
   pull_request:
