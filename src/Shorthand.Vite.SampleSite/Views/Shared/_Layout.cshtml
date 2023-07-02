@@ -1,10 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@using Shorthand.Vite.Contracts
+
+@inject IViteService Vite
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Shorthand.Vite.SampleSite</title>
-    <link rel="stylesheet" href="@await Vite.GetAssetUrlAsync("/wwwroot/css/site.scss")" />
+
+    <environment names="Production">
+        @* Preload the module script, almost always a good idea *@
+        <link rel="modulepreload" href="@await Vite.GetAssetUrlAsync("wwwroot/js/site.js")" as="script" />
+        @* Load the stylesheet manually in production mode *@
+        <link rel="stylesheet" href="@await Vite.GetAssetUrlAsync("style.css")" />
+    </environment>
 </head>
 <body>
     <header>
@@ -39,7 +49,10 @@
             &copy; 2023 - Shorthand.Vite.SampleSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script type="module" src="@await Vite.GetAssetUrlAsync("/wwwroot/js/site.js")"></script>
+
+    @* Load the main module script, during development this will also load the stylesheet *@
+    <script type="module" src="@await Vite.GetAssetUrlAsync("wwwroot/js/site.js")"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

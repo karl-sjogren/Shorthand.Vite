@@ -27,6 +27,11 @@ public class ViteService : IViteService {
             var hostname = GetViteHostname();
             var port = GetVitePort();
             var protocol = GetViteProtocol();
+
+            if(assetPath.StartsWith("/", StringComparison.Ordinal)) {
+                assetPath = assetPath[1..];
+            }
+
             return $"{protocol}://{hostname}:{port}/{assetPath}";
         }
 
@@ -77,7 +82,7 @@ public class ViteService : IViteService {
 
     internal string GetViteProtocol() {
         var options = _options.Value;
-        if(options.Https.HasValue) {
+        if(options.Https == true) {
             return "https";
         }
 

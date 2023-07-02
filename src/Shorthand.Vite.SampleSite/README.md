@@ -1,1 +1,0 @@
-# Shorthand.Vite.SampleSite

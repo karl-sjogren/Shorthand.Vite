@@ -4,14 +4,9 @@ import { resolve } from 'node:path';
 
 export default defineConfig({
   build: {
-    outDir: resolve(__dirname, './tmp/'),
-    emptyOutDir: false,
+    outDir: resolve(__dirname, './wwwroot/'),
     manifest: true,
     cssCodeSplit: false,
-    sourcemap: true,
-    modulePreload: {
-      polyfill: false
-    },
     rollupOptions: {
       input: resolve(__dirname, './wwwroot/js/site.js')
     }

@@ -4,7 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddVite();
+builder.Services.AddVite(options => {
+    options.Hostname = "localhost";
+    options.Port = 5173;
+    options.Https = false;
+});
 
 var app = builder.Build();
 

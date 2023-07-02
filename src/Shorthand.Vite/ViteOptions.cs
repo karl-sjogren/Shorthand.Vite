@@ -1,7 +1,7 @@
 namespace Shorthand.Vite;
 
-public record ViteOptions {
-    public string? Hostname { get; init; }
-    public Int32? Port { get; init; }
-    public bool? Https { get; init; }
+public class ViteOptions {
+    public string? Hostname { get; set; }
+    public Int32? Port { get; set; }
+    public bool? Https { get; set; }
 }
