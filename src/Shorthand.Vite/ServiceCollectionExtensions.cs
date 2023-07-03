@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions {
 
         services.AddScoped<IViteService, ViteService>();
         services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
+        services.AddSingleton<IEnvironmentVariableProvider, EnvironmentVariableProvider>();
 
         return services;
     }

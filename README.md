@@ -15,8 +15,7 @@ An easy way to reference Vite assets in ASP.NET Core projects.
 In your `Startup.cs` file, add the following to the `ConfigureServices` method:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
+public void ConfigureServices(IServiceCollection services) {
     services.AddVite();
 }
 ```
@@ -85,8 +84,7 @@ There are a few options that can be configured if the default values are
 not suitable.
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
+public void ConfigureServices(IServiceCollection services) {
     services.AddVite(options => {
         options.Hostname = "localhost";
         options.Port = 5173;

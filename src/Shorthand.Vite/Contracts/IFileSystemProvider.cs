@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Shorthand.Vite.Contracts;
 
-public interface IFileSystemProvider {
+internal interface IFileSystemProvider {
     void CreateDirectory(string path);
     bool DirectoryExists(string path);
     bool FileExists(string path);

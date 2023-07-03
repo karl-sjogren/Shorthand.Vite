@@ -8,7 +8,7 @@ namespace Shorthand.Vite.Services;
 // stuff more testable, this however makes this class almost
 // untestable, so we exclude it from code coverage.
 [ExcludeFromCodeCoverage]
-public class FileSystemProvider : IFileSystemProvider {
+internal class FileSystemProvider : IFileSystemProvider {
     private readonly ILogger<FileSystemProvider> _logger;
 
     public FileSystemProvider(ILogger<FileSystemProvider> logger) {

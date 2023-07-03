@@ -11,14 +11,21 @@ public class ViteService : IViteService {
     private readonly IOptionsSnapshot<ViteOptions> _options;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IFileSystemProvider _fileSystemProvider;
+    private readonly IEnvironmentVariableProvider _environmentVariableProvider;
     private readonly ILogger<ViteService> _logger;
 
     private static readonly JsonSerializerOptions _manifestJsonOptions = new(JsonSerializerDefaults.Web);
 
-    public ViteService(IOptionsSnapshot<ViteOptions> options, IWebHostEnvironment webHostEnvironment, IFileSystemProvider fileSystemProvider, ILogger<ViteService> logger) {
+    internal ViteService(
+            IOptionsSnapshot<ViteOptions> options,
+            IWebHostEnvironment webHostEnvironment,
+            IFileSystemProvider fileSystemProvider,
+            IEnvironmentVariableProvider environmentVariableProvider,
+            ILogger<ViteService> logger) {
         _options = options;
         _webHostEnvironment = webHostEnvironment;
         _fileSystemProvider = fileSystemProvider;
+        _environmentVariableProvider = environmentVariableProvider;
         _logger = logger;
     }
 
@@ -58,7 +65,7 @@ public class ViteService : IViteService {
             return options.Hostname;
         }
 
-        var viteHostName = Environment.GetEnvironmentVariable("VITE_HOSTNAME");
+        var viteHostName = _environmentVariableProvider.GetEnvironmentVariable("VITE_HOSTNAME");
         if(!string.IsNullOrWhiteSpace(viteHostName)) {
             return viteHostName;
         }
@@ -72,7 +79,7 @@ public class ViteService : IViteService {
             return options.Port.Value;
         }
 
-        var vitePortString = Environment.GetEnvironmentVariable("VITE_PORT");
+        var vitePortString = _environmentVariableProvider.GetEnvironmentVariable("VITE_PORT");
         if(Int32.TryParse(vitePortString, out var vitePort)) {
             return vitePort;
         }
@@ -86,7 +93,7 @@ public class ViteService : IViteService {
             return "https";
         }
 
-        var viteHttps = Environment.GetEnvironmentVariable("VITE_HTTPS");
+        var viteHttps = _environmentVariableProvider.GetEnvironmentVariable("VITE_HTTPS");
         if(viteHttps?.Equals("true", StringComparison.OrdinalIgnoreCase) == true) {
             return "https";
         }
