@@ -1,31 +1,33 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shorthand.Vite.Contracts;
 using Shorthand.Vite.Exceptions;
+
+using ManifestFileType = System.Collections.Generic.Dictionary<string, Shorthand.Vite.Services.ViteManifestEntry>;
 
 namespace Shorthand.Vite.Services;
 
 public class ViteService : IViteService {
     private readonly IOptionsSnapshot<ViteOptions> _options;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly IFileSystemProvider _fileSystemProvider;
     private readonly IEnvironmentVariableProvider _environmentVariableProvider;
+    private readonly IMemoryCache _memoryCache;
     private readonly ILogger<ViteService> _logger;
 
-    private static readonly JsonSerializerOptions _manifestJsonOptions = new(JsonSerializerDefaults.Web);
-
-    internal ViteService(
+    public ViteService(
             IOptionsSnapshot<ViteOptions> options,
             IWebHostEnvironment webHostEnvironment,
-            IFileSystemProvider fileSystemProvider,
             IEnvironmentVariableProvider environmentVariableProvider,
+            IMemoryCache memoryCache,
             ILogger<ViteService> logger) {
         _options = options;
         _webHostEnvironment = webHostEnvironment;
-        _fileSystemProvider = fileSystemProvider;
         _environmentVariableProvider = environmentVariableProvider;
+        _memoryCache = memoryCache;
         _logger = logger;
     }
 
@@ -42,7 +44,7 @@ public class ViteService : IViteService {
             return $"{protocol}://{hostname}:{port}/{assetPath}";
         }
 
-        var manifest = await GetAssetManifestAsync(cancellationToken);
+        var manifest = await GetCachedManifestAsync(cancellationToken);
 
         manifest.TryGetValue(assetPath, out var asset);
 
@@ -101,23 +103,41 @@ public class ViteService : IViteService {
         return "http";
     }
 
-    private async Task<Dictionary<string, ManifestEntry>> GetAssetManifestAsync(CancellationToken cancellationToken) {
+    private async Task<ManifestFileType> GetCachedManifestAsync(CancellationToken cancellationToken) {
+        var cacheKey = "Shorthand.Vite.ViteManifest";
+        if(_memoryCache.TryGetValue(cacheKey, out ManifestFileType? manifest) && manifest != null) {
+            return manifest;
+        }
+
+        manifest = await GetAssetManifestAsync(cancellationToken);
+        _memoryCache.Set(cacheKey, manifest);
+
+        return manifest;
+    }
+
+    private async Task<ManifestFileType> GetAssetManifestAsync(CancellationToken cancellationToken) {
         try {
-            var webRootPath = _webHostEnvironment.WebRootPath;
-            var manifestPath = Path.Combine(webRootPath, "manifest.json");
+            var options = _options.Value;
+            var manifestPath = options.ManifestFileName;
 
-            using var fileStream = _fileSystemProvider.OpenRead(manifestPath);
-            var manifest = await JsonSerializer.DeserializeAsync<Dictionary<string, ManifestEntry>>(fileStream, _manifestJsonOptions, cancellationToken);
+            var fileProvider = _webHostEnvironment.WebRootFileProvider;
+            using var fileStream = fileProvider.GetFileInfo(manifestPath).CreateReadStream();
+            var manifest = await JsonSerializer.DeserializeAsync(fileStream, typeof(ManifestFileType), ViteManifestContext.Default, cancellationToken) as ManifestFileType;
 
-            return new Dictionary<string, ManifestEntry>(manifest ?? new Dictionary<string, ManifestEntry>(), StringComparer.Ordinal);
+            return new ManifestFileType(manifest ?? new ManifestFileType(), StringComparer.Ordinal);
         } catch(Exception e) {
             throw new ViteException("Failed to read asset manifest from disk.", e);
         }
     }
+}
 
-    private record ManifestEntry {
-        public string File { get; init; } = string.Empty;
-        public string Src { get; init; } = string.Empty;
-        public bool IsEntry { get; init; }
-    }
+internal record ViteManifestEntry {
+    public string File { get; set; } = string.Empty;
+    public string Src { get; set; } = string.Empty;
+    public bool IsEntry { get; set; }
+}
+
+[JsonSerializable(typeof(ManifestFileType))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+internal partial class ViteManifestContext : JsonSerializerContext {
 }

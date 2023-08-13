@@ -10,7 +10,6 @@ public static class ServiceCollectionExtensions {
             .Configure(configureOptions ?? (_ => { }));
 
         services.AddScoped<IViteService, ViteService>();
-        services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
         services.AddSingleton<IEnvironmentVariableProvider, EnvironmentVariableProvider>();
 
         return services;
