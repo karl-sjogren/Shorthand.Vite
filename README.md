@@ -50,9 +50,7 @@ export default defineConfig({
 Then open up your layout `cshtml`file and add the following at the top:
 
 ```html
-@using Shorthand.Vite.Contracts
-
-@inject IViteService Vite
+@inject Shorthand.Vite.Contracts.IViteService Vite
 ```
 
 If you want to use this in several files you can put that in the
@@ -71,7 +69,7 @@ Then in your `head` tag, add the following:
 
 And at the bottom of your `body` tag, add the following:
 
-```cshtml
+```html
     @* Load the main module script, during development this will also load the stylesheet *@
     <script type="module" src="@await Vite.GetAssetUrlAsync("wwwroot/js/site.js")"></script>
 ```

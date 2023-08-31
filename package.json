@@ -5,6 +5,6 @@
   "scripts": {
     "push-release": "git checkout main && git push && git checkout develop && git push && git push --tags --no-verify",
     "update-packages": "dotnet outdated --upgrade --version-lock Major",
-    "pack-release": "dotnet pack -o artifacts/ -c Release"
+    "pack-release": "dotnet pack ./src/Shorthand.Vite/Shorthand.Vite.csproj -o artifacts/ -c Release"
   }
 }
