@@ -181,13 +181,36 @@ jobs:
     - name: Restore NuGet packages
       run: dotnet restore --verbosity minimal
 
-    - name: Publish application
-      run: dotnet publish -o ./artifacts -c Release
-      working-directory: ./
+    - name: Pack template project
+      run: dotnet pack ./src/Shorthand.Vite/Shorthand.Vite.csproj --configuration Release --output artifacts
 
-    - name: Upload build artifacts
+    - name: Upload packages
       uses: actions/upload-artifact@v3
       with:
-        name: publish-artifacts
+        name: packages
+        path: artifacts/*.nupkg
+
+  publish:
+    name: NuGet Publish
+    needs: net-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Download artiifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: packages
         path: ./artifacts/
-        if-no-files-found: error
+
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        dotnet-quality: ga
+
+    - name: Publish package to NuGet.org
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run: dotnet nuget push artifacts/*.nupkg --api-key $NUGET_KEY --source https://api.nuget.org/v3/index.json
+      working-directory: ./
