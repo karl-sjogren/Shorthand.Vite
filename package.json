@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "push-release": "git checkout main && git push && git checkout develop && git push && git push --tags --no-verify",
-    "update-packages": "dotnet outdated --upgrade --version-lock Major"
+    "update-packages": "dotnet outdated --upgrade --version-lock Major",
+    "pack-release": "dotnet pack -o artifacts/ -c Release"
   }
 }
