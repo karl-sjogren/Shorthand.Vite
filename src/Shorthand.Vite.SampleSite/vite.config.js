@@ -13,5 +13,8 @@ export default defineConfig({
   },
   server: {
     strictPort: true
+  },
+  hmr: {
+
   }
 });

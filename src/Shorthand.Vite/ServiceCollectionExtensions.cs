@@ -12,6 +12,8 @@ public static class ServiceCollectionExtensions {
         services.AddScoped<IViteService, ViteService>();
         services.AddSingleton<IEnvironmentVariableProvider, EnvironmentVariableProvider>();
 
+        services.AddHttpForwarder();
+
         return services;
     }
 }

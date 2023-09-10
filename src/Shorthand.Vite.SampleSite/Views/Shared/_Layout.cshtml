@@ -48,9 +48,15 @@
         </div>
     </footer>
 
-    @* Load the main module script, during development this will also load the stylesheet *@
-    <script type="module" src="@await Vite.GetAssetUrlAsync("wwwroot/js/site.js")"></script>
-    
+    <environment exclude="Production">
+        <script type="module" src="/.vite/wwwroot/js/site.js"></script>
+    </environment>
+
+    <environment names="Production">
+        @* Load the main module script. If used during development this will also load the stylesheet *@
+        <script type="module" src="@await Vite.GetAssetUrlAsync("wwwroot/js/site.js")"></script>
+    </environment>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
