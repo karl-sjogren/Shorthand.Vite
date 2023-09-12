@@ -7,5 +7,7 @@ public class ViteOptions {
     public string ManifestFileName { get; set; } = "manifest.json";
 
     public string ProxyPrefix { get; set; } = "/.vite";
-    public string ProxyRewriteRoot { get; set; } = "/wwwroot";
+    public string[] ProxyRewriteRoots { get; set; } = new[] { "/Scripts", "/Styles" };
+
+    public string ViteDevServerUrl => $"{(Https == true ? "https" : "http")}://{Hostname}:{Port}";
 }

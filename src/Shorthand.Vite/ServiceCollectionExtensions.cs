@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shorthand.Vite.Contracts;
 using Shorthand.Vite.Services;
 
@@ -13,6 +14,10 @@ public static class ServiceCollectionExtensions {
         services.AddSingleton<IEnvironmentVariableProvider, EnvironmentVariableProvider>();
 
         services.AddHttpForwarder();
+        services.AddHttpClient("Shorthand.Vite.HttpClient", (serviceProvider, client) => {
+            var options = serviceProvider.GetRequiredService<IOptions<ViteOptions>>().Value;
+            client.BaseAddress = new Uri(options.ViteDevServerUrl);
+        });
 
         return services;
     }

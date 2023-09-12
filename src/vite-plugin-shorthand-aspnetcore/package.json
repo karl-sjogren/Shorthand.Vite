@@ -1,0 +1,19 @@
+{
+  "name": "vite-plugin-shorthand-aspnetcore",
+  "version": "0.2.0",
+  "description": "A Vite plugin that sets up some basic settings for use with Shorthand.Vite NuGet package.",
+  "main": "index.js",
+  "scripts": {
+    "publish-release": "npm publish",
+    "publish-preview": "npm publish --tag preview"
+  },
+  "author": "Karl-Johan Sjögren",
+  "license": "MIT",
+  "keywords": [
+    "vite",
+    "vite-plugin"
+  ],
+  "peerDependencies": {
+    "vite": "4.x"
+  }
+}
