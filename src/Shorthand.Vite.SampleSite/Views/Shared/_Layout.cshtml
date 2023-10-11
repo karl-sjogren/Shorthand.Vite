@@ -48,14 +48,7 @@
         </div>
     </footer>
 
-    <environment exclude="Production">
-        <script type="module" src="/Scripts/site.js?vite-entry-module=true"></script>
-    </environment>
-
-    <environment names="Production">
-        @* Load the main module script. If used during development this will also load the stylesheet *@
-        <script type="module" src="@await Vite.GetAssetUrlAsync("Scripts/site.js")"></script>
-    </environment>
+    <script type="module" src="@await Vite.GetAssetUrlAsync("Scripts/site.js")"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

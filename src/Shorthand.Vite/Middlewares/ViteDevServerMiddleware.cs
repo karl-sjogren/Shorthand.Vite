@@ -35,8 +35,7 @@ public class ViteDevServerProxyMiddleware {
 
         var httpClient = new HttpMessageInvoker(new SocketsHttpHandler() {
             UseProxy = false,
-            AllowAutoRedirect = false,
-            AutomaticDecompression = DecompressionMethods.None,
+            AutomaticDecompression = DecompressionMethods.All,
             UseCookies = false,
             ActivityHeadersPropagator = new ReverseProxyPropagator(DistributedContextPropagator.Current),
             ConnectTimeout = TimeSpan.FromSeconds(15)
@@ -50,6 +49,10 @@ public class ViteDevServerProxyMiddleware {
 
         var responseJson = await httpClient.GetStringAsync(".shorthand-vite/modules", context.RequestAborted);
 
-        return JsonSerializer.Deserialize<string[]>(responseJson) ?? Array.Empty<string>();
+        var modules = JsonSerializer.Deserialize<string[]>(responseJson) ?? Array.Empty<string>();
+
+        return modules
+            .Where(module => !string.IsNullOrWhiteSpace(module) && module.StartsWith("/", StringComparison.Ordinal))
+            .ToArray();
     }
 }

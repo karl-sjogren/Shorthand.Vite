@@ -4,7 +4,12 @@ const plugin = () => {
     name: 'vite-plugin-shorthand-aspnetcore',
 
     config: () => ({
+      build: {
+        cssCodeSplit: false,
+        manifest: true
+      },
       server: {
+        strictPort: true,
         hmr: {
           path: '/.vite/hmr'
         }

@@ -91,6 +91,49 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
+### Experimental features
+
+In the 0.3.0 release a proxy feature was added that allows you to make all the
+requests to the main site and have a middleware that proxies it to the Vite Dev
+Server. This is useful if you want to use external tools such as BrowserStack or
+the iOS Simulator on OSX and don't want to setup the Vite Dev Server to be accessible
+from external clients.
+
+This is done using `YARP.ReverseProxy` which also supports proxying websockets
+so HMR (Hot Module Replacement) will work as well.
+
+This will be an opt-in feature and will not be enabled by default for now.
+
+To enable the proxy mode a new middlware has to be registered during development.
+
+```csharp
+if(app.Environment.IsDevelopment()) {
+    app.UseViteDevServerProxy();
+}
+```
+
+This should go before `app.UseStaticFiles()` in your pipeline.
+
+To setup communication between the proxy and the Vite Dev Server, the following
+Vite plugin also needs to be installed.
+
+```sh
+> npm install --save-dev vite-plugin-shorthand-aspnetcore
+```
+
+Then in your `vite.config.js` file you need to add the following:
+
+```js
+import ViteAspNetCore from 'vite-plugin-shorthand-aspnetcore';
+
+export default defineConfig({
+  plugins: [
+    ViteAspNetCore()
+  ],
+  ...
+});
+```
+
 ## Sample site
 
 There is a sample proejct in the repository that shows a sample setup

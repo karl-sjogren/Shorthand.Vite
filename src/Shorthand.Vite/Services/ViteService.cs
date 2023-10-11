@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shorthand.Vite.Contracts;
@@ -32,7 +33,7 @@ public class ViteService : IViteService {
     }
 
     public async Task<string?> GetAssetUrlAsync(string assetPath, CancellationToken cancellationToken = default) {
-        if(_webHostEnvironment.EnvironmentName == "Development") {
+        if(_webHostEnvironment.IsEnvironment("Development")) {
             var hostname = GetViteHostname();
             var port = GetVitePort();
             var protocol = GetViteProtocol();
@@ -41,7 +42,9 @@ public class ViteService : IViteService {
                 assetPath = assetPath[1..];
             }
 
-            return $"{protocol}://{hostname}:{port}/{assetPath}";
+            var querySeparator = assetPath.Contains('?', StringComparison.Ordinal) ? "&" : "?";
+
+            return $"{protocol}://{hostname}:{port}/{assetPath}{querySeparator}vite-entry-module=true";
         }
 
         var manifest = await GetCachedManifestAsync(cancellationToken);
