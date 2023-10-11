@@ -20,11 +20,11 @@ public class ViteServiceTests {
     }
 
     [Theory]
-    [InlineData("test.js", null, null, null, "http://localhost:5173/test.js")]
-    [InlineData("/test.js", null, null, null, "http://localhost:5173/test.js")]
-    [InlineData("test.js", "192.168.0.1", null, null, "http://192.168.0.1:5173/test.js")]
-    [InlineData("test.js", "localhost", 3000, false, "http://localhost:3000/test.js")]
-    [InlineData("test.js", "localhost", 3000, true, "https://localhost:3000/test.js")]
+    [InlineData("test.js", null, null, null, "http://localhost:5173/test.js?vite-entry-module=true")]
+    [InlineData("/test.js", null, null, null, "http://localhost:5173/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "192.168.0.1", null, null, "http://192.168.0.1:5173/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "localhost", 3000, false, "http://localhost:3000/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "localhost", 3000, true, "https://localhost:3000/test.js?vite-entry-module=true")]
     public async Task GetAssetUrlAsync_WhenCalledInDevelopmentModeWithOptions_ReturnsExpectedUrlAsync(string assetPath, string hostname, Int32? port, bool? useHttps, string expected) {
         var snapshot = A.Fake<IOptionsSnapshot<ViteOptions>>();
         A.CallTo(() => snapshot.Value).Returns(new ViteOptions {
@@ -49,11 +49,12 @@ public class ViteServiceTests {
     }
 
     [Theory]
-    [InlineData("test.js", null, null, null, "http://localhost:5173/test.js")]
-    [InlineData("/test.js", null, null, null, "http://localhost:5173/test.js")]
-    [InlineData("test.js", "192.168.0.1", null, null, "http://192.168.0.1:5173/test.js")]
-    [InlineData("test.js", "localhost", 3000, false, "http://localhost:3000/test.js")]
-    [InlineData("test.js", "localhost", 3000, true, "https://localhost:3000/test.js")]
+    [InlineData("test.js", null, null, null, "http://localhost:5173/test.js?vite-entry-module=true")]
+    [InlineData("/test.js", null, null, null, "http://localhost:5173/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "192.168.0.1", null, null, "http://192.168.0.1:5173/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "localhost", 3000, false, "http://localhost:3000/test.js?vite-entry-module=true")]
+    [InlineData("test.js", "localhost", 3000, true, "https://localhost:3000/test.js?vite-entry-module=true")]
+    [InlineData("test.js?some-kind-of-query=true", "localhost", 3000, true, "https://localhost:3000/test.js?some-kind-of-query=true&vite-entry-module=true")]
     public async Task GetAssetUrlAsync_WhenCalledInDevelopmentModeWithEnvironmentVariables_ReturnsExpectedUrlAsync(string assetPath, string hostname, Int32? port, bool? useHttps, string expected) {
         var snapshot = A.Fake<IOptionsSnapshot<ViteOptions>>();
 
